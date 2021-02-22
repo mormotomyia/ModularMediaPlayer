@@ -1,0 +1,26 @@
+{
+  "name": "typescript-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "start": "npx parcel src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-server":"cd assets && http-server -p 5051 --cors",
+    "prepublish": "tsc"
+  },
+  "author": "mormo",
+  "license": "GPLv3",
+  "dependencies": {
+    "reconnecting-websocket": "^4.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "2.2.1",
+    "sass": "^1.32.6",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.4"
+  }
+}
