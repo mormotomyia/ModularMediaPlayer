@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-server":"cd assets && http-server -p 5051 --cors",
+    "start-server": "cd assets && http-server -p 5051 --cors",
     "prepublish": "tsc"
   },
   "author": "mormo",
@@ -16,6 +16,7 @@
     "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
+    "http-server": "^0.12.3",
     "nodemon": "^2.0.7",
     "parcel-bundler": "^1.12.4",
     "prettier": "2.2.1",

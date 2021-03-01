@@ -1,4 +1,5 @@
 import { CustomElement } from '../bases/custom-element-base';
+import { IBanner } from '../interfaces/IBanner';
 
 @CustomElement({
     selector: 'mormo-banner',
@@ -19,57 +20,64 @@ export class CustomMormoBanner extends HTMLElement {
         this.instanciate();
     }
 
-    get loaded(){
+    get loaded() {
         return this._loaded;
     }
 
-    onload:any = () => {
+    onload: any = () => {
         this._loaded = true;
         // console.log('load')
-    }
+    };
 
-    render(template:any){
-        this.setContent(template.content)
-        Object.keys(template.style).forEach(key => {
+    render(template: IBanner) {
+        this.setContent(template.content);
+        Object.keys(template.style).forEach((key) => {
             // console.log(key,JSON.stringify(template.style[key]).substring(1,JSON.stringify(template.style[key]).length-1).replaceAll(',',';').replaceAll('"',''))
-            console.log(document.querySelector(key).getAttribute("style"))
-            const item = document.querySelector(key)
-            item.setAttribute("style",`${item.getAttribute("style")===null?"":item.getAttribute("style")}; ${JSON.stringify(template.style[key]).substring(1,JSON.stringify(template.style[key]).length-1).replaceAll(',',';').replaceAll('"','')}`)
+            console.log(document.querySelector(key).getAttribute('style'));
+            const item = document.querySelector(key);
+            item.setAttribute(
+                'style',
+                `${
+                    item.getAttribute('style') === null
+                        ? ''
+                        : item.getAttribute('style')
+                }; ${JSON.stringify(template.style[key])
+                    .substring(
+                        1,
+                        JSON.stringify(template.style[key]).length - 1
+                    )
+                    .replaceAll(',', ';')
+                    .replaceAll('"', '')}`
+            );
             // document.querySelector(key).setAttribute("style","color:red")
-
-        })
-        Object.keys(template.animate).forEach(key => {
-            const item = document.querySelector(key)
-            console.log(item)
-            console.log(template.animate[key].keyframes)
-            console.log(template.animate[key].options)
-            item.animate(template.animate[key].keyframes, template.animate[key].options);
-        })
+        });
+        Object.keys(template.animate).forEach((key) => {
+            const item = document.querySelector(key);
+            console.log(item);
+            console.log(template.animate[key].keyframes);
+            console.log(template.animate[key].options);
+            item.animate(
+                template.animate[key].keyframes,
+                template.animate[key].options
+            );
+        });
         // this.setAttribute('style',template.style)
         this.onload();
-    }   
+    }
 
-
-    setContent(content:string){
-        this.innerHTML = content
-        
+    setContent(content: string) {
+        this.innerHTML = content;
     }
 
     instanciate() {
         // throw new Error("Method not implemented.");
     }
 
-    connectedCallback() {
-  
-    }
+    connectedCallback() {}
 
-    disconnectedCallback() {
-   
-    }
+    disconnectedCallback() {}
 
-    componentWillMount() {
-
-    }
+    componentWillMount() {}
 
     componentDidMount() {
         // console.log('component did mount');
@@ -83,6 +91,4 @@ export class CustomMormoBanner extends HTMLElement {
     componentDidUnmount() {
         // console.log('component did unmount');
     }
-
-
 }

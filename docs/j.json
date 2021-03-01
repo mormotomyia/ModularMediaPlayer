@@ -1,0 +1,21 @@
+{
+    "szene": {
+        "name": "$szeneName",
+        "user": "$creatorName",
+        "images": { 
+            "$id": {"hash":"$hash", "type": $datatype} 
+        },
+        "options": {}
+    },
+
+    "config": {
+        "configName": "$configName",
+        "szenen": { "0": $szene, "1": $szene },
+        "events": {
+            "0": { "key": $key, "szene": $szene },
+            "1": { "key": $key, "szene": $szene }
+        }
+    }
+}
+
+
