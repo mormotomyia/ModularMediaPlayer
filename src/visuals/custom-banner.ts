@@ -53,9 +53,9 @@ export class CustomMormoBanner extends HTMLElement {
         });
         Object.keys(template.animate).forEach((key) => {
             const item = document.querySelector(key);
-            console.log(item);
-            console.log(template.animate[key].keyframes);
-            console.log(template.animate[key].options);
+            // console.log(item);
+            // console.log(template.animate[key].keyframes);
+            // console.log(template.animate[key].options);
             item.animate(
                 template.animate[key].keyframes,
                 template.animate[key].options

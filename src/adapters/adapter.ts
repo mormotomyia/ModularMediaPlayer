@@ -1,16 +1,16 @@
 import { MediaType } from '../visuals/media-canvas';
 import { IInput, MediaCanvasFactory } from '../visuals/media-canvas-factory';
 
-export interface IVideoPlayerAdapter {
+export interface IMediaPlayerAdapter {
     start: (receiveFunc: (input: IInput) => void) => void; // setup logik
     stop: () => void; // teardown
 }
 
 export class Adapter {
-    adapter: IVideoPlayerAdapter;
+    adapter: IMediaPlayerAdapter;
     canvas: MediaCanvasFactory;
 
-    constructor(adapter: IVideoPlayerAdapter) {
+    constructor(adapter: IMediaPlayerAdapter) {
         this.adapter = adapter;
     }
 
