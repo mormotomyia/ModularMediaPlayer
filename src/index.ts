@@ -26,11 +26,6 @@ const test = new MediaCanvasFactory(
     true
 );
 
-// import { EmsuWebSocketAdapter } from './adapters/websocket';
-// const impl = new EmsuWebSocketAdapter();
-// const adapter = new Adapter(impl);
-// adapter.start(test);
-
 // test.render();
 
 // setTimeout(
