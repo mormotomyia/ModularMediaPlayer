@@ -4,7 +4,7 @@ import { IBanner } from '../interfaces/IBanner';
 @CustomElement({
     selector: 'mormo-banner',
     template: `<div></div>`,
-    style: `position: inherit; left:0; top:0;opacity:0; width:inherit; height:inherit`,
+    style: `left:0; top:0; width:inherit; height:inherit`,
     useShadow: false,
 })
 export class CustomMormoBanner extends HTMLElement {

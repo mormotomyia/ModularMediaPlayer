@@ -65,8 +65,6 @@ export class MediaCanvas {
         );
 
         if (debug) {
-            // console.log(this.rootelement.getAttribute("style"))
-
             this.rootelement.setAttribute(
                 'style',
                 `${this.rootelement.getAttribute(
@@ -92,7 +90,6 @@ export class MediaCanvas {
                 position: absolute;
                 overflow: hidden`
                 );
-                this.createMediaElements(canvasElement);
             } else {
                 // math time!
                 canvasElement.setAttribute(
@@ -109,8 +106,8 @@ export class MediaCanvas {
                 position: absolute; overflow: hidden
                 `
                 );
-                this.createMediaElements(canvasElement);
             }
+            this.createMediaElements(canvasElement);
 
             if (debug) {
                 canvasElement.setAttribute(
@@ -158,22 +155,38 @@ export class MediaCanvas {
     private checkReady(): void {
         // console.log('----')
 
-        console.log(this.mediaContainers.values());
+        // console.log(this.mediaContainers.values());
 
         if (
             this.swapper.every((value: IMediaElement) => {
+                console.log(value.video);
                 const helperVideo = value.video.find(
-                    (e) => e.className === `active`
+                    (e) => e.className === `unhide`
                 );
                 const helperImage = value.image.find(
-                    (e) => e.className === `active`
+                    (e) => e.className === `unhide`
                 );
                 const helperBanner = value.banners.find(
-                    (e) => e.className === `active`
+                    (e) => e.className === `unhide`
                 );
-                if (helperVideo !== null && helperVideo.playable) return true;
-                if (helperImage !== null && helperImage.complete) return true;
-                if (helperBanner !== null && helperBanner.loaded) return true;
+                if (
+                    helperVideo !== null &&
+                    helperVideo !== undefined &&
+                    helperVideo.playable
+                )
+                    return true;
+                if (
+                    helperImage !== null &&
+                    helperImage !== undefined &&
+                    helperImage.complete
+                )
+                    return true;
+                if (
+                    helperBanner !== null &&
+                    helperBanner !== undefined &&
+                    helperBanner.loaded
+                )
+                    return true;
                 return false;
             })
         ) {
@@ -188,18 +201,20 @@ export class MediaCanvas {
         console.log('started!');
         console.log(this.swapper);
         this.swapper.forEach((value: IMediaElement) => {
-            value.activeVideo.muted = true;
-            value.activeVideo.play();
+            if (value.videoToShow !== undefined) {
+                value.videoToShow.muted = true;
+                value.videoToShow.play();
+            }
 
             // this needs to work in some better way
 
             value.allUnusedItem.forEach((item) => {
-                item.style.animation = 'fadeout 0.5s';
-                setTimeout(() => (item.style.opacity = '0'), 500);
+                // item.style.animation = 'fadeout 0.5s';
+                // setTimeout(() => (item.style.opacity = '0'), 500);
             });
             value.allUsedItem.forEach((item) => {
-                item.style.animation = 'fadein 0.5s';
-                setTimeout(() => (item.style.opacity = '1'), 500);
+                // item.style.animation = 'fadein 0.5s';
+                // setTimeout(() => (item.style.opacity = '1'), 500);
             });
 
             value.swap();
@@ -216,7 +231,6 @@ export class MediaCanvas {
         }>
     ): void {
         this.swapper = [];
-
         console.log('swapping');
         media.forEach((value) => {
             const { element, type, source } = value;
@@ -228,7 +242,9 @@ export class MediaCanvas {
 
     private setUnusedDisplayNone(unused: Array<HTMLElement>) {
         unused.forEach((element) => {
-            element.style.display = 'none';
+            if (element !== undefined) {
+                element.style.display = 'none';
+            }
         });
     }
 
@@ -240,13 +256,16 @@ export class MediaCanvas {
             case 'video':
                 const video = this.mediaContainers
                     .get(element)
-                    .video.find((e) => e.className === `active`);
+                    .video.find((e) => e.className === `hide`);
+                console.log(video);
+
                 video
                     .getElementsByTagName('source')
                     .item(0)
                     .setAttribute('src', source);
                 video.oncanplaythrough = () =>
                     this.playableCallback(element, video); // wtf! this is amazing!
+                video.className = 'unhide';
                 video.load();
 
                 unused = this.mediaContainers.get(element).activeNonUsed(video);
@@ -257,10 +276,11 @@ export class MediaCanvas {
             case 'image':
                 const img = this.mediaContainers
                     .get(element)
-                    .image.find((e) => e.className === `active`);
+                    .image.find((e) => e.className === `hide`);
+                console.log(img);
                 img.setAttribute('src', source);
                 img.onload = () => this.playableCallback(element, img); // wtf! this is amazing!
-
+                img.className = 'unhide';
                 unused = this.mediaContainers.get(element).activeNonUsed(img);
                 console.log(unused);
                 this.setUnusedDisplayNone(unused);
@@ -270,7 +290,8 @@ export class MediaCanvas {
             case 'text':
                 const banner = this.mediaContainers
                     .get(element)
-                    .banners.find((e) => e.className === `active`);
+                    .banners.find((e) => e.className === `hide`);
+                banner.className = 'unhide';
                 banner.onload = () => this.playableCallback(element, banner);
                 fetch(source, {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.

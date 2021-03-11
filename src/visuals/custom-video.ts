@@ -3,7 +3,7 @@ import { CustomElement } from '../bases/custom-element-base';
 @CustomElement({
     selector: 'mormo-video',
     template: `<source>`,
-    style: `position: inherit; left:0; top:0;opacity:0`,
+    style: `left:0; top:0`,
     useShadow: false,
     extender: 'video',
 })
@@ -22,17 +22,11 @@ export class CustomMormoVideo extends HTMLVideoElement {
         // throw new Error("Method not implemented.");
     }
 
-    connectedCallback() {
-  
-    }
+    connectedCallback() {}
 
-    disconnectedCallback() {
-   
-    }
+    disconnectedCallback() {}
 
-    componentWillMount() {
-
-    }
+    componentWillMount() {}
 
     componentDidMount() {
         // console.log('component did mount');

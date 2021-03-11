@@ -12,11 +12,14 @@ export interface IMediaElement {
     // tempContainerImage?:HTMLImageElement,
     swap: Function;
     activeVideo: CustomMormoVideo;
-    activeImage: HTMLImageElement;
     inactiveVideo: CustomMormoVideo;
+    videoToShow: CustomMormoVideo;
+    activeImage: HTMLImageElement;
     inactiveImage: HTMLImageElement;
+    imageToShow: HTMLImageElement;
     activeBanner: CustomMormoBanner;
     inactiveBanner: CustomMormoBanner;
+    bannerToShow: CustomMormoBanner;
 
     allUsedItem: Array<HTMLElement>;
     allUnusedItem: Array<HTMLElement>;
@@ -87,24 +90,24 @@ export class MediaElement implements IMediaElement {
                 document.createElement('img')
             );
 
-            imageElement.style.position = 'fixed';
-            imageElement.style.left = 'inherit';
-            imageElement.style.top = 'inherit';
-            imageElement.style.display = 'block';
-            imageElement.style.opacity = '0';
+            // imageElement.style.position = 'fixed';
+            // imageElement.style.left = 'inherit';
+            // imageElement.style.top = 'inherit';
+            // imageElement.style.display = 'block';
+            // imageElement.style.opacity = '0';
 
             const videoElement = new CustomMormoVideo();
-            videoElement.style.display = 'block';
-            videoElement.style.opacity = '0';
+            // videoElement.style.display = 'block';
+            // videoElement.style.opacity = '0';
             if (index === 0) {
-                imageElement.classList.add('active');
-                videoElement.classList.add('active');
-                bannerElement.classList.add('active');
+                imageElement.classList.add('hide');
+                videoElement.classList.add('hide');
+                bannerElement.classList.add('hide');
             }
             if (index === 1) {
-                imageElement.classList.add('inactive');
-                videoElement.classList.add('inactive');
-                bannerElement.classList.add('inactive');
+                imageElement.classList.add('hide');
+                videoElement.classList.add('hide');
+                bannerElement.classList.add('hide');
             }
             canvasElement.appendChild(bannerElement);
             canvasElement.appendChild(videoElement);
@@ -116,42 +119,63 @@ export class MediaElement implements IMediaElement {
     }
 
     get activeImage() {
-        return this.image.find((e) => e.className === `active`);
+        return this.image.find((e) => e.className === `show`);
     }
 
     get activeVideo() {
-        return this.video.find((e) => e.className === `active`);
+        return this.video.find((e) => e.className === `show`);
     }
 
     get activeBanner() {
-        return this.banners.find((e) => e.className === `active`);
+        return this.banners.find((e) => e.className === `show`);
+    }
+
+    get videoToShow() {
+        return this.video.find((e) => e.className === `unhide`);
+    }
+    get imageToShow() {
+        return this.image.find((e) => e.className === `unhide`);
+    }
+    get bannerToShow() {
+        return this.banners.find((e) => e.className === `unhide`);
     }
 
     get inactiveImage() {
-        return this.image.find((e) => e.className === `inactive`);
+        return this.image.find((e) => e.className === `hide`);
     }
 
     get inactiveVideo() {
-        return this.video.find((e) => e.className === `inactive`);
+        return this.video.find((e) => e.className === `hide`);
     }
 
     get inactiveBanner() {
-        return this.banners.find((e) => e.className === `inactive`);
+        return this.banners.find((e) => e.className === `hide`);
     }
 
     swapElements(elements: Array<HTMLElement>) {
         elements.forEach((element) => {
-            element.classList.contains('active')
-                ? (element.className = 'inactive')
-                : (element.className = 'active');
+            console.log(element.className);
+            switch (element.className) {
+                case 'show':
+                    element.className = 'hide';
+                    break;
+                case 'unhide':
+                    element.className = 'show';
+                    break;
+                case 'hide':
+                    element.className = 'hide';
+                    break;
+            }
+            console.log(element.className);
+
+            // element.className('show')
+            //     ? (element.className = 'hide')
+            //     : (element.className = 'show');
+            // element.classList.contains('unhide')
+            //     ? (element.className = 'show')
+            //     : (element.className = 'unhide');
         });
     }
-
-    // swapVideos(videos:Array<CustomMormoVideo>){
-    //     videos.forEach(element => {
-    //         element.classList.contains('active')?element.className = 'inactive':element.className = 'active'
-    //     })
-    // }
 
     swap() {
         // console.log('swap!')
