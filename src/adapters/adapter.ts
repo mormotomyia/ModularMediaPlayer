@@ -15,7 +15,6 @@ export class Adapter {
     }
 
     receive(input: IInput) {
-        // console.log(this.canvas);
         console.log(input);
         if (input.duration && input.media) {
             this.canvas.setMedia(input.layer, input.duration, input.media);

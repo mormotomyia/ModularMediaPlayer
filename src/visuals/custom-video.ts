@@ -28,18 +28,11 @@ export class CustomMormoVideo extends HTMLVideoElement {
 
     componentWillMount() {}
 
-    componentDidMount() {
-        // console.log('component did mount');
-        // console.log(new Date().getMilliseconds());
-    }
+    componentDidMount() {}
 
-    componentWillUnmount() {
-        // console.log('component will unmount');
-    }
+    componentWillUnmount() {}
 
-    componentDidUnmount() {
-        // console.log('component did unmount');
-    }
+    componentDidUnmount() {}
 
     get playing() {
         return !!(

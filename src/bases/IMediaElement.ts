@@ -2,7 +2,6 @@ import { CustomMormoBanner } from '../visuals/custom-banner';
 import { CustomMormoVideo } from '../visuals/custom-video';
 
 export interface IMediaElement {
-    activeNonUsed(video: HTMLElement): Array<HTMLElement>;
     canvas: HTMLDivElement;
     video: Array<CustomMormoVideo>;
     image: Array<HTMLImageElement>;
@@ -56,29 +55,6 @@ export class MediaElement implements IMediaElement {
         return array;
     }
 
-    activeNonUsed(used: HTMLElement): Array<HTMLElement> {
-        const array = [];
-        console.log(used.nodeName);
-        switch (used.nodeName) {
-            case 'VIDEO':
-                array.push(this.activeBanner);
-                array.push(this.activeImage);
-                break;
-
-            case 'IMG':
-                array.push(this.activeBanner);
-                array.push(this.activeVideo);
-                break;
-
-            case 'MORMO-BANNER':
-                array.push(this.activeVideo);
-                array.push(this.activeImage);
-                break;
-        }
-        console.log(array);
-        return array;
-    }
-
     constructCanvas(canvasElement: HTMLDivElement) {
         this.image = [];
         this.video = [];
@@ -90,15 +66,7 @@ export class MediaElement implements IMediaElement {
                 document.createElement('img')
             );
 
-            // imageElement.style.position = 'fixed';
-            // imageElement.style.left = 'inherit';
-            // imageElement.style.top = 'inherit';
-            // imageElement.style.display = 'block';
-            // imageElement.style.opacity = '0';
-
             const videoElement = new CustomMormoVideo();
-            // videoElement.style.display = 'block';
-            // videoElement.style.opacity = '0';
             if (index === 0) {
                 imageElement.classList.add('hide');
                 videoElement.classList.add('hide');
@@ -154,7 +122,6 @@ export class MediaElement implements IMediaElement {
 
     swapElements(elements: Array<HTMLElement>) {
         elements.forEach((element) => {
-            console.log(element.className);
             switch (element.className) {
                 case 'show':
                     element.className = 'hide';
@@ -166,19 +133,10 @@ export class MediaElement implements IMediaElement {
                     element.className = 'hide';
                     break;
             }
-            console.log(element.className);
-
-            // element.className('show')
-            //     ? (element.className = 'hide')
-            //     : (element.className = 'show');
-            // element.classList.contains('unhide')
-            //     ? (element.className = 'show')
-            //     : (element.className = 'unhide');
         });
     }
 
     swap() {
-        // console.log('swap!')
         this.swapElements(this.image);
         this.swapElements(this.video);
         this.swapElements(this.banners);

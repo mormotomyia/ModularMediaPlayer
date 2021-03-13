@@ -7,6 +7,9 @@ import { CustomMormoVideo } from './custom-video';
  * @license
  */
 
+/**
+ * defines the screen position on the canvas
+ */
 export interface IScreen {
     [key: string]: {
         p1: { x: number; y: number };
@@ -31,9 +34,9 @@ export const MediaType = 'video' || 'image' || 'text';
 export class MediaCanvas {
     startTimeout: any;
     timeout: any;
-    defaultContentEndAction: Function = () =>
-        (this.rootelement.style.display = 'none');
-    contentEndAction: Function = this.defaultContentEndAction;
+    defaultContentEndAction: Function = (arg: boolean) => this.hideAll(arg);
+    // (this.rootelement.style.display = 'none');
+    // contentEndAction: Function = this.defaultContentEndAction;
     container: HTMLElement;
     rootelement: HTMLElement;
     mediaContainers: Map<string, IMediaElement> = new Map();
@@ -55,7 +58,7 @@ export class MediaCanvas {
         debug: boolean
     ) {
         this.container = container;
-        // console.log(this.container)
+
         this.rootelement = document.createElement('div');
         this.rootelement.classList.add('media-canvas');
         this.rootelement.id = layer.toString();
@@ -72,7 +75,7 @@ export class MediaCanvas {
                 )};background-color:rgb(50,30,120)`
             );
         }
-        // console.log(Object.entries(screens))
+
         Object.entries(screens).forEach((element: Array<any>) => {
             const canvasElement = document.createElement('div');
             canvasElement.classList.add('canvas-element');
@@ -84,27 +87,28 @@ export class MediaCanvas {
                 canvasElement.setAttribute(
                     'style',
                     `height:${element[1].p2.y - element[1].p1.y}px ;
-                width:${element[1].p2.x - element[1].p1.x}px ;
-                left:${element[1].p1.x}px;
-                top: ${element[1].p1.y}px;
-                position: absolute;
-                overflow: hidden`
+                    width:${element[1].p2.x - element[1].p1.x}px ;
+                    left:${element[1].p1.x}px;
+                    top: ${element[1].p1.y}px;
+                    position: absolute;
+                    overflow: hidden`
                 );
             } else {
                 // math time!
                 canvasElement.setAttribute(
                     'style',
+                    `width:${element[1].p2.y - element[1].p1.y}px ;
+                    height:${element[1].p2.x - element[1].p1.x}px ;
+                    left:${
+                        element[1].p1.x + element[1].p2.x - element[1].p1.x
+                    }px; 
+                    top: ${element[1].p1.y}px;
+                    transform-origin:0% 0%;
+                    transform: rotate(${
+                        element[1].rotate !== true ? element[1].rotate : '90deg'
+                    });
+                    position: absolute; overflow: hidden
                     `
-                width:${element[1].p2.y - element[1].p1.y}px ;
-                height:${element[1].p2.x - element[1].p1.x}px ;
-                left:${element[1].p1.x + element[1].p2.x - element[1].p1.x}px; 
-                top: ${element[1].p1.y}px;
-                transform-origin:0% 0%;
-                transform: rotate(${
-                    element[1].rotate !== true ? element[1].rotate : '90deg'
-                });
-                position: absolute; overflow: hidden
-                `
                 );
             }
             this.createMediaElements(canvasElement);
@@ -137,7 +141,7 @@ export class MediaCanvas {
     }
 
     private playableCallback(element: string, dom: HTMLElement): void {
-        console.log(dom.nodeName);
+        // is fired whenever there is some
         console.log('ready Check');
         if (dom.nodeName === 'VIDEO') {
             dom.oncanplaythrough = () => {};
@@ -159,7 +163,7 @@ export class MediaCanvas {
 
         if (
             this.swapper.every((value: IMediaElement) => {
-                console.log(value.video);
+                // console.log(value.video);
                 const helperVideo = value.video.find(
                     (e) => e.className === `unhide`
                 );
@@ -192,35 +196,35 @@ export class MediaCanvas {
         ) {
             console.log(`${new Date()} passed check`);
             clearTimeout(this.startTimeout);
-            setTimeout(() => this.start(), 1500 - new Date().getMilliseconds());
-            console.log(this.startTimeout);
+            this.startTimeout = setTimeout(
+                () => this.start(),
+                1500 - new Date().getMilliseconds()
+            );
+            // console.log(this.startTimeout);
         }
     }
 
     private start(): void {
-        console.log('started!');
-        console.log(this.swapper);
         this.swapper.forEach((value: IMediaElement) => {
             if (value.videoToShow !== undefined) {
                 value.videoToShow.muted = true;
                 value.videoToShow.play();
             }
 
-            // this needs to work in some better way
-
-            value.allUnusedItem.forEach((item) => {
-                // item.style.animation = 'fadeout 0.5s';
-                // setTimeout(() => (item.style.opacity = '0'), 500);
-            });
-            value.allUsedItem.forEach((item) => {
-                // item.style.animation = 'fadein 0.5s';
-                // setTimeout(() => (item.style.opacity = '1'), 500);
-            });
-
             value.swap();
         });
 
         this.rootelement.style.display = 'block';
+    }
+
+    hideAll(arg: boolean) {
+        if (arg) {
+            this.rootelement.style.display = 'none';
+        }
+
+        this.mediaContainers.forEach((value) => {
+            value.swap();
+        });
     }
 
     setMedias(
@@ -231,33 +235,20 @@ export class MediaCanvas {
         }>
     ): void {
         this.swapper = [];
-        console.log('swapping');
         media.forEach((value) => {
             const { element, type, source } = value;
             this.setMedia(element, type, source);
-            console.log(this.mediaContainers.get(element));
             this.swapper.push(this.mediaContainers.get(element));
         });
     }
 
-    private setUnusedDisplayNone(unused: Array<HTMLElement>) {
-        unused.forEach((element) => {
-            if (element !== undefined) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
     setMedia(element: string, type: typeof MediaType, source: string): void {
-        console.log(element);
-
         let unused: Array<HTMLElement> = [];
         switch (type) {
             case 'video':
                 const video = this.mediaContainers
                     .get(element)
                     .video.find((e) => e.className === `hide`);
-                console.log(video);
 
                 video
                     .getElementsByTagName('source')
@@ -268,22 +259,16 @@ export class MediaCanvas {
                 video.className = 'unhide';
                 video.load();
 
-                unused = this.mediaContainers.get(element).activeNonUsed(video);
-                console.log(unused);
-                this.setUnusedDisplayNone(unused);
                 break;
 
             case 'image':
                 const img = this.mediaContainers
                     .get(element)
                     .image.find((e) => e.className === `hide`);
-                console.log(img);
+
                 img.setAttribute('src', source);
                 img.onload = () => this.playableCallback(element, img); // wtf! this is amazing!
                 img.className = 'unhide';
-                unused = this.mediaContainers.get(element).activeNonUsed(img);
-                console.log(unused);
-                this.setUnusedDisplayNone(unused);
 
                 break;
 
@@ -301,14 +286,7 @@ export class MediaCanvas {
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data);
                         banner.render(data);
-
-                        unused = this.mediaContainers
-                            .get(element)
-                            .activeNonUsed(banner);
-                        console.log(unused);
-                        this.setUnusedDisplayNone(unused);
                     })
                     .catch((error) => {
                         console.error('Error:', error);

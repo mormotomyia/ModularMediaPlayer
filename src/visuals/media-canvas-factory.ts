@@ -60,16 +60,17 @@ export class MediaCanvasFactory {
 
             clearTimeout(this.layers.get(layer).timeout);
             clearTimeout(this.layers.get(layer).startTimeout);
-            this.layers.get(layer).defaultContentEndAction();
+
+            this.layers.get(layer).defaultContentEndAction(true);
         } else {
             this.layers.get(layer).setMedias(media);
             if (duration < 1) {
-                // wtf is this? dont do anything?!?!
             } else {
                 clearTimeout(this.layers.get(layer).timeout);
                 clearTimeout(this.layers.get(layer).startTimeout);
+                // setTimeout(() => console.log('after two seconds'), 2000);
                 this.layers.get(layer).timeout = setTimeout(
-                    this.layers.get(layer).defaultContentEndAction,
+                    () => this.layers.get(layer).defaultContentEndAction(false),
                     duration * 1000 + new Date().getMilliseconds()
                 );
             }

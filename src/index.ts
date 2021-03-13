@@ -25,8 +25,16 @@ const test = new MediaCanvasFactory(
 
     true
 );
+import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
+// const impl = new EmsuWebSocketAdapter(
+//     'ws://statemachinemodule:8765',
+//     'http://servermodule:8080/static/content'
+// );
+const impl = new EmsuWebSocketAdapter('localhost', 'localhost:8080');
+const adapter = new Adapter(impl);
+adapter.start(test);
 
-// test.render();
+test.render();
 
 // setTimeout(
 //     () =>
@@ -40,41 +48,67 @@ const test = new MediaCanvasFactory(
 //     1200
 // );
 
-setTimeout(
-    () =>
-        test.setMedia(0, 100, [
-            {
-                element: '0',
-                type: 'image',
-                source:
-                    'http://localhost:5051/9163B84DB7D8A3FCB7FD750BC3B7F571',
-            },
-        ]),
-    3000
-);
-setTimeout(
-    () =>
-        test.setMedia(0, 100, [
-            {
-                element: '0',
-                type: 'image',
-                source:
-                    'http://localhost:5051/5D8DFCAC2EF3B212E00FEA1DADAEA75A',
-            },
-        ]),
-    5000
-);
-// CBCC332870F45FB14F83B762FDE50297
-setTimeout(
-    () =>
-        test.setMedia(0, 100, [
-            {
-                element: '0',
-                type: 'image',
-                source:
-                    'http://localhost:5051/CBCC332870F45FB14F83B762FDE50297',
-            },
-        ]),
-    7000
-);
+// setTimeout(
+//     () =>
+//         test.setMedia(0, 100, [
+//             {
+//                 element: '0',
+//                 type: 'video',
+//                 source:
+//                     'http://localhost:8080/36E24461A35436423C466818ECC02412',
+//             },
+//             {
+//                 element: '1',
+//                 type: 'image',
+//                 source:
+//                     'http://localhost:8080/9EA41E9A6007FEF75821347D1A66DD2D',
+//             },
+//         ]),
+//     3000
+// );
+
+// setTimeout(
+//     () =>
+//         test.setMedia(0, 100, [
+//             {
+//                 element: '1',
+//                 type: 'video',
+//                 source:
+//                     'http://localhost:8080/36E24461A35436423C466818ECC02412',
+//             },
+//             {
+//                 element: '0',
+//                 type: 'image',
+//                 source:
+//                     'http://localhost:8080/9EA41E9A6007FEF75821347D1A66DD2D',
+//             },
+//         ]),
+//     6000
+// );
+
+// setTimeout(
+//     () =>
+//         test.setMedia(0, 100, [
+//             {
+//                 element: '0',
+//                 type: 'image',
+//                 source:
+//                     'http://localhost:5051/5D8DFCAC2EF3B212E00FEA1DADAEA75A',
+//             },
+//         ]),
+//     5000
+// );
+// // CBCC332870F45FB14F83B762FDE50297
+// setTimeout(
+//     () =>
+//         test.setMedia(0, 100, [
+//             {
+//                 element: '0',
+//                 type: 'image',
+//                 source:
+//                     'http://localhost:5051/CBCC332870F45FB14F83B762FDE50297',
+//             },
+//         ]),
+//     7000
+// );
 // setTimeout(() => test.setMedia(1), 7500);

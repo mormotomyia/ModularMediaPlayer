@@ -66,31 +66,35 @@
 // }
 
 .hide {
-    position: fixed;
-    left: inherit;
-    top: inherit;
+    width: inherit;
+    height: inherit;
+    position: absolute;
     display: block;
     opacity: 0;
-    transition: opacity linear .5s;
+    transition: opacity cubic-bezier(1,0,0,1) .5s;
+    overflow:inherit;
+    // display: none
 }
 
-
-
 .unhide{
-    position: fixed;
-    left: inherit;
-    top: inherit;
+    width: inherit;
+    height: inherit;
+    position: absolute;
     display: block;
     opacity: 0;
-    transition: opacity linear .5s;
+    transition: opacity cubic-bezier(1,0,0,1) .5s;
+    overflow:inherit;
 }
 
 .show{
-    position: fixed;
-    left: inherit;
-    top: inherit;
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    // left: inherit;
+    // top: inherit;
     display: block;
     opacity: 1;
-    transition: opacity linear .5s;
+    transition: opacity cubic-bezier(1,0,0,1) .5s;
+    overflow:inherit;
 }
 

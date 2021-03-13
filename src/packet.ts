@@ -14,8 +14,6 @@ export class Packet {
         duration: number,
         screens: any
     ) {
-        // console.log(screens)
-        // console.log('BBB')
         this.end_packet = end_packet;
         this.layer = layer;
         this.overlay = overlay;
