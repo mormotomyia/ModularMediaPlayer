@@ -22,9 +22,10 @@ const test = new MediaCanvasFactory(
             rotate: false,
         },
     },
-
     true
 );
+
+
 import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
 // const impl = new EmsuWebSocketAdapter(
 //     'ws://statemachinemodule:8765',

@@ -1,0 +1,114 @@
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import { MediaType } from '../visuals/media-canvas';
+import { IInput } from '../visuals/media-canvas-factory';
+import { IMediaPlayerAdapter } from './adapter';
+
+const message = {
+    content: [
+        {
+            key: 'screen_0',
+            content_id: 'CBCC332870F45FB14F83B762FDE50297',
+            content_type: 'image',
+        },
+        {
+            key: 'screen_1',
+            content_id: 'CDA32CF5833A32A4420D3C77FE1B0C6F',
+            content_type: 'image',
+        },
+    ],
+    duration: 5,
+    overlay: false,
+    overlays: [],
+    layer: 1,
+    end_packet: false,
+};
+
+export interface EmsuContent {
+    key: string;
+    content_id: string;
+    content_type: string;
+}
+export interface EmsuInput {
+    duration: number;
+    overlay: boolean;
+    overlays: Array<EmsuInput>;
+    layer: number;
+    end_packet: boolean;
+    content: Array<EmsuContent>;
+}
+
+export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
+    connection: ReconnectingWebSocket;
+    receiveFunc: (input: IInput) => void;
+    socketPath: string;
+    contentPath: string;
+
+    constructor(socketPath: string, contentPath: string) {
+        this.socketPath = socketPath;
+        this.contentPath = contentPath;
+    }
+
+    start(receiveFunc: (input: IInput) => void) {
+        this.receiveFunc = receiveFunc;
+        this.connection = this.websocket(this.socketPath);
+        this.connection.onopen = (event) => {
+            console.log(event);
+        };
+        this.connection.onmessage = (event: MessageEvent) => {
+            const formatted = this.formatAsIInput(JSON.parse(event.data));
+            this.receiveFunc(formatted);
+        };
+    }
+
+    formatAsIInput(data: EmsuInput) {
+        if (data.end_packet) {
+            return {
+                layer: data.layer,
+            };
+        } else {
+            return {
+                layer: data.layer,
+                duration: data.duration + 1,
+                media: this.buildMedia(data.content),
+            };
+        }
+    }
+
+    private buildMedia(
+        contentArray: Array<EmsuContent>
+    ): Array<{ element: string; type: typeof MediaType; source: string }> {
+        const mapped = contentArray.map((content: EmsuContent) => {
+            return {
+                type: <typeof MediaType>content.content_type,
+                source: `http://${this.contentPath}/${content.content_id}`,
+                element: content.key.replace('screen_', ''),
+            };
+        });
+
+        return mapped;
+    }
+
+    stop() {
+        this.connection.close(1000, 'ok');
+    }
+
+    private websocket(websocketLocation: string): ReconnectingWebSocket {
+        const options = {
+            maxReconnectionDelay: 5000,
+            minReconnectionDelay: 1000 + Math.random() * 2000,
+            reconnectionDelayGrowFactor: 1.3,
+            minUptime: 5000,
+            connectionTimeout: 2000,
+            maxRetries: Infinity,
+            maxEnqueuedMessages: Infinity,
+            startClosed: false,
+            debug: false,
+        };
+        let connection = new ReconnectingWebSocket(
+            `ws://${websocketLocation}:8765`,
+            [],
+            options
+        );
+        return connection;
+    }
+}
