@@ -57,6 +57,7 @@ export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
         this.connection.onmessage = (event: MessageEvent) => {
             const formatted = this.formatAsIInput(JSON.parse(event.data));
             this.receiveFunc(formatted);
+            this.connection.send(event.data);
         };
     }
 

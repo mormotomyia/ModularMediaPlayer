@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import { MediaCanvasFactory } from './visuals/media-canvas-factory';
 import { Adapter } from './adapters/adapter';
 //  ?x={"0":%20{"p1":%20{"x":%200,%20"y":%200},%20"p2":%20{"x":%201080,%20"y":%201920},%20"rotate":%20false}}
@@ -25,13 +26,19 @@ const test = new MediaCanvasFactory(
     true
 );
 
-
 import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
-// const impl = new EmsuWebSocketAdapter(
-//     'ws://statemachinemodule:8765',
-//     'http://servermodule:8080/static/content'
-// );
-const impl = new EmsuWebSocketAdapter('localhost', 'localhost:8080');
+
+const websocketConn = 'statemachinemodule';
+const downloadConn = 'servermodule:8080/static/content';
+
+// const websocketConn = 'localhost';
+// const downloadConn = 'localhost:8080';
+
+// (async () => {
+//     console.log('Did not execute here too.');
+// })();
+
+const impl = new EmsuWebSocketAdapter(websocketConn, downloadConn);
 const adapter = new Adapter(impl);
 adapter.start(test);
 
