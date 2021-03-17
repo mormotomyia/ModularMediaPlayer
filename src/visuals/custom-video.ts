@@ -10,6 +10,9 @@ import { CustomElement } from '../bases/custom-element-base';
 export class CustomMormoVideo extends HTMLVideoElement {
     constructor() {
         super();
+        this.loop = false;
+        this.autoplay = false;
+
         // this.connectedCallback();
         // this is hacking the template into existence before the call to connectedCallback.
         // Usually you want to create the template on adding it to the DOM.
@@ -45,5 +48,9 @@ export class CustomMormoVideo extends HTMLVideoElement {
 
     get playable() {
         return !!(this.readyState > 2);
+    }
+
+    get complete() {
+        return this.playable;
     }
 }

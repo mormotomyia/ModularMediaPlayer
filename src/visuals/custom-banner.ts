@@ -24,6 +24,10 @@ export class CustomMormoBanner extends HTMLElement {
         return this._loaded;
     }
 
+    get complete() {
+        return this.loaded;
+    }
+
     onload: any = () => {
         this._loaded = true;
     };

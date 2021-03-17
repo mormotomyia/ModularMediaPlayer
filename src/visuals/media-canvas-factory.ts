@@ -60,7 +60,6 @@ export class MediaCanvasFactory {
 
             clearTimeout(this.layers.get(layer).timeout);
             clearTimeout(this.layers.get(layer).startTimeout);
-
             this.layers.get(layer).defaultContentEndAction(true);
         } else {
             this.layers.get(layer).setMedias(media);
