@@ -18,7 +18,7 @@ const message = {
     ],
     duration: 5,
     overlay: false,
-    overlays: [],
+    overlays: new Array(),
     layer: 1,
     end_packet: false,
 };
@@ -56,6 +56,7 @@ export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
         };
         this.connection.onmessage = (event: MessageEvent) => {
             const formatted = this.formatAsIInput(JSON.parse(event.data));
+
             this.receiveFunc(formatted);
             this.connection.send(event.data);
         };

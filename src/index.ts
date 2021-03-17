@@ -7,8 +7,20 @@ const log = new URLSearchParams(window.location.search);
 console.log(JSON.parse(log.get('x')));
 console.log(JSON.stringify({ x: 'x' }));
 
+import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
+let websocketConn;
+let downloadConn;
+
+if (process.env.NODE_ENV === 'production') {
+    websocketConn = 'statemachinemodule';
+    downloadConn = 'servermodule:8080/static/content';
+} else {
+    websocketConn = 'localhost';
+    downloadConn = 'localhost:8080';
+}
+
 const test = new MediaCanvasFactory(
-    document.getElementById('container'),
+    document.getElementsByTagName('body')[0],
     2,
     { x: 1080, y: 1920 * 2 },
     {
@@ -25,18 +37,6 @@ const test = new MediaCanvasFactory(
     },
     true
 );
-
-import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
-
-const websocketConn = 'statemachinemodule';
-const downloadConn = 'servermodule:8080/static/content';
-
-// const websocketConn = 'localhost';
-// const downloadConn = 'localhost:8080';
-
-// (async () => {
-//     console.log('Did not execute here too.');
-// })();
 
 const impl = new EmsuWebSocketAdapter(websocketConn, downloadConn);
 const adapter = new Adapter(impl);
