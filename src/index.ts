@@ -25,14 +25,9 @@ const test = new MediaCanvasFactory(
 
     true
 );
-import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
-// const impl = new EmsuWebSocketAdapter(
-//     'ws://statemachinemodule:8765',
-//     'http://servermodule:8080/static/content'
-// );
-const impl = new EmsuWebSocketAdapter('localhost', 'localhost:8080');
-const adapter = new Adapter(impl);
-adapter.start(test);
+
+// const adapter = new Adapter(impl);
+// adapter.start(test);
 
 test.render();
 
