@@ -11,19 +11,24 @@ import { EmsuWebSocketAdapter } from './adapters/emsu-websocket';
 let websocketConn;
 let downloadConn;
 
-if (process.env.NODE_ENV === 'production') {
+console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV.split('+'));
+
+const envs = process.env.NODE_ENV.split('+');
+
+if (envs[0] === 'production') {
     websocketConn = 'statemachinemodule';
     downloadConn = 'servermodule:8080/static/content';
 } else {
     websocketConn = 'localhost';
     downloadConn = 'localhost:8080';
 }
+let screenSize;
+let screenOrientation;
 
-const test = new MediaCanvasFactory(
-    document.getElementsByTagName('body')[0],
-    2,
-    { x: 1080, y: 1920 * 2 },
-    {
+if (envs[1] === 'spotlight') {
+    screenSize = { x: 1080, y: 1920 * 2 };
+    screenOrientation = {
         0: {
             p1: { x: 0, y: 0 },
             p2: { x: 1080, y: 1920 },
@@ -34,46 +39,41 @@ const test = new MediaCanvasFactory(
             p2: { x: 1080, y: 1920 * 2 },
             rotate: false,
         },
-    },
+    };
+} else if (envs[1] === 'gondel') {
+    screenSize = { x: 1080 * 2, y: 1920 + 540 };
+    screenOrientation = {
+        0: {
+            p1: { x: 0, y: 0 },
+            p2: { x: 1080, y: 1920 },
+            rotate: false,
+        },
+        1: {
+            p1: { x: 1080, y: 0 },
+            p2: { x: 1080 * 2, y: 1920 },
+            rotate: false,
+        },
+        2: {
+            p1: { x: 0, y: 1920 },
+            p2: { x: 1920, y: 1920 + 540 },
+            rotate: false,
+        },
+    };
+}
+
+const mediaCanvasContainer = new MediaCanvasFactory(
+    document.getElementsByTagName('body')[0],
+    2,
+    screenSize,
+    screenOrientation,
     true
 );
 
 const impl = new EmsuWebSocketAdapter(websocketConn, downloadConn);
 const adapter = new Adapter(impl);
-adapter.start(test);
+adapter.start(mediaCanvasContainer);
 
-test.render();
-
-// setTimeout(
-//     () =>
-//         test.setMedia(0, 90, [
-//             {
-//                 element: '0',
-//                 type: 'text',
-//                 source: 'http://localhost:5051/banner.json',
-//             },
-//         ]),
-//     1200
-// );
-
-// setTimeout(
-//     () =>
-//         test.setMedia(0, 100, [
-//             {
-//                 element: '0',
-//                 type: 'video',
-//                 source:
-//                     'http://localhost:8080/36E24461A35436423C466818ECC02412',
-//             },
-//             {
-//                 element: '1',
-//                 type: 'image',
-//                 source:
-//                     'http://localhost:8080/9EA41E9A6007FEF75821347D1A66DD2D',
-//             },
-//         ]),
-//     3000
-// );
+mediaCanvasContainer.render();
 
 // setTimeout(
 //     () =>
@@ -93,30 +93,3 @@ test.render();
 //         ]),
 //     6000
 // );
-
-// setTimeout(
-//     () =>
-//         test.setMedia(0, 100, [
-//             {
-//                 element: '0',
-//                 type: 'image',
-//                 source:
-//                     'http://localhost:5051/5D8DFCAC2EF3B212E00FEA1DADAEA75A',
-//             },
-//         ]),
-//     5000
-// );
-// // CBCC332870F45FB14F83B762FDE50297
-// setTimeout(
-//     () =>
-//         test.setMedia(0, 100, [
-//             {
-//                 element: '0',
-//                 type: 'image',
-//                 source:
-//                     'http://localhost:5051/CBCC332870F45FB14F83B762FDE50297',
-//             },
-//         ]),
-//     7000
-// );
-// setTimeout(() => test.setMedia(1), 7500);

@@ -48,8 +48,10 @@ export class CustomMormoBanner extends HTMLElement {
                         1,
                         JSON.stringify(template.style[key]).length - 1
                     )
-                    .replaceAll(',', ';')
-                    .replaceAll('"', '')}`
+                    .split(',')
+                    .join(';')
+                    .split('"')
+                    .join('')}`
             );
         });
         Object.keys(template.animate).forEach((key) => {

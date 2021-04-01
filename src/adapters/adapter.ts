@@ -2,6 +2,7 @@ import { MediaType } from '../visuals/media-canvas';
 import { IInput, MediaCanvasFactory } from '../visuals/media-canvas-factory';
 
 export interface IMediaPlayerAdapter {
+    send: (output: object) => void;
     start: (receiveFunc: (input: IInput) => void) => void; // setup logik
     stop: () => void; // teardown
 }
@@ -15,7 +16,7 @@ export class Adapter {
     }
 
     receive(input: IInput) {
-        console.log(input);
+        // console.log(input);
         if (input.duration && input.media) {
             this.canvas.setMedia(input.layer, input.duration, input.media);
         } else {
@@ -23,8 +24,13 @@ export class Adapter {
         }
     }
 
+    send(message: object): void {
+        this.adapter.send(message);
+    }
+
     start(canvas: MediaCanvasFactory) {
         this.canvas = canvas;
+        this.canvas.setAdapterCallback(this.send);
         this.adapter.start(this.receive.bind(this));
     }
 

@@ -40,6 +40,7 @@ export interface EmsuInput {
 export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
     connection: ReconnectingWebSocket;
     receiveFunc: (input: IInput) => void;
+    // sendFunc: (output:object) => void;
     socketPath: string;
     contentPath: string;
 
@@ -48,11 +49,30 @@ export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
         this.contentPath = contentPath;
     }
 
+    send(output: object) {
+        console.log(`sent ${output} to websocket`);
+        this.connection.send(JSON.stringify(output));
+    }
+
     start(receiveFunc: (input: IInput) => void) {
         this.receiveFunc = receiveFunc;
         this.connection = this.websocket(this.socketPath);
         this.connection.onopen = (event) => {
             console.log(event);
+        };
+        this.connection.onerror = (error) => {
+            console.log(error);
+            fetch(`http://${this.contentPath}/error/${this.socketPath}`, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'reload', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+            })
+                .then(() => console.log('correct endpoint'))
+
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         };
         this.connection.onmessage = (event: MessageEvent) => {
             const formatted = this.formatAsIInput(JSON.parse(event.data));
@@ -63,7 +83,9 @@ export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
     }
 
     formatAsIInput(data: EmsuInput) {
+        console.log(`${data.end_packet}: ${data.layer}: ${Date.now()}`);
         if (data.end_packet) {
+            console.log('END PACKET');
             return {
                 layer: data.layer,
             };

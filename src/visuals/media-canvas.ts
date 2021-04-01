@@ -143,12 +143,12 @@ export class MediaCanvas {
     }
 
     private playableCallback(element: string, dom: HTMLElement): void {
-        console.log('ready Check');
+        // console.log('ready Check');
         this.checkReady();
     }
 
     private checkReady(): void {
-        console.log(this.swapper);
+        // console.log(this.swapper);
         if (
             this.swapper.every((value: IMediaElement) => {
                 const helperVideo = value.video.find(
@@ -181,25 +181,22 @@ export class MediaCanvas {
                 return false;
             })
         ) {
-            console.log(`${new Date()} passed check`);
+            // console.log(`${new Date()} passed check`);
             clearTimeout(this.startTimeout);
-            this.startTimeout = setTimeout(
-                () => this.start(),
-                1500 - new Date().getMilliseconds()
-            );
+            this.startTimeout = setTimeout(() => this.start(), 10);
             // console.log(this.startTimeout);
         }
     }
 
     private start(): void {
-        console.log('start');
         this.swapper.forEach((value: IMediaElement) => {
             if (value.videoToShow !== undefined) {
                 value.videoToShow.muted = true;
                 value.videoToShow.play();
             }
-            console.log(value);
+            // console.log(value);
             value.swap();
+            console.log(`start: ${Date.now()}`);
         });
 
         this.rootelement.style.display = 'block';
@@ -209,7 +206,7 @@ export class MediaCanvas {
         if (arg) {
             this.rootelement.style.display = 'none';
         }
-        console.log('hide all');
+        console.log(`hide all: ${Date.now()}`);
         console.log(this.rootelement.id);
 
         this.mediaContainers.forEach((value) => {
@@ -224,7 +221,7 @@ export class MediaCanvas {
             source: string;
         }>
     ): void {
-        console.log(media);
+        // console.log(media);
         this.swapper = [];
         media.forEach((value) => {
             const { element, type, source } = value;
@@ -273,6 +270,7 @@ export class MediaCanvas {
             .item(0)
             .setAttribute('src', source);
         video.oncanplaythrough = () => this.playableCallback(element, video); // wtf! this is amazing!
+
         video.className = 'unhide';
         video.load();
     }

@@ -5,16 +5,18 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "start": "export NODE_ENV=development && npx parcel src/index.html",
+    "start-spotlight": "export NODE_ENV=development+spotlight && npx parcel src/index.html",
+    "start-gondel": "export NODE_ENV=development+gondel && npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-server": "cd assets && http-server -p 5051 --cors",
     "prepublish": "tsc",
-    "build": "find ./deploy/templates/dist -maxdepth 1 -type f -delete && export NODE_ENV=production && parcel build src/index.html --out-dir deploy/templates/dist --no-source-maps --target browser --bundle-node-modules --detailed-report"
+    "build-spotlight": "find ./deploy/templates/dist -maxdepth 1 -type f -delete && export NODE_ENV=production+spotlight && parcel build src/index.html --out-dir deploy/templates/dist --no-source-maps --target browser --bundle-node-modules --detailed-report",
+    "build-local": "find ./deploy/templates/dist -maxdepth 1 -type f -delete && export NODE_ENV=development+spotlight && parcel build src/index.html --out-dir deploy/templates/dist --no-source-maps --target browser --bundle-node-modules --detailed-report",
+    "build-gondel": "find ./deploy/templates/dist -maxdepth 1 -type f -delete && export NODE_ENV=production+gondel && parcel build src/index.html --out-dir deploy/templates/dist --no-source-maps --target browser --bundle-node-modules --detailed-report"
   },
   "author": "mormo",
   "license": "GPLv3",
   "dependencies": {
-    "dotenv": "^8.2.0",
     "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {

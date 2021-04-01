@@ -12,6 +12,8 @@ export interface IInput {
 
 export class MediaCanvasFactory {
     layers: Map<Number, MediaCanvas> = new Map();
+    callback: (input: object) => void;
+
     // welcome to Java, little JavaScript
     constructor(
         root: HTMLElement,
@@ -28,6 +30,10 @@ export class MediaCanvasFactory {
         }
 
         this.render();
+    }
+
+    setAdapterCallback(callback: (input: object) => void) {
+        this.callback = callback;
     }
 
     render(): void {
