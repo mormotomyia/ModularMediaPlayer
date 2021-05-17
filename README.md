@@ -1,6 +1,6 @@
 # ModularMediaPlayer
 
-
+"nodemon": "^2.0.7",
 
 
 ## This project

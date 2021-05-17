@@ -61,7 +61,6 @@ export class EmsuWebSocketAdapter implements IMediaPlayerAdapter {
             console.log(event);
         };
         this.connection.onerror = (error) => {
-            console.log(error);
             fetch(`http://${this.contentPath}/error/${this.socketPath}`, {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 mode: 'cors', // no-cors, *cors, same-origin

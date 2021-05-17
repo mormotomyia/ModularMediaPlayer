@@ -74,22 +74,3 @@ const adapter = new Adapter(impl);
 adapter.start(mediaCanvasContainer);
 
 mediaCanvasContainer.render();
-
-// setTimeout(
-//     () =>
-//         test.setMedia(0, 100, [
-//             {
-//                 element: '1',
-//                 type: 'video',
-//                 source:
-//                     'http://localhost:8080/36E24461A35436423C466818ECC02412',
-//             },
-//             {
-//                 element: '0',
-//                 type: 'image',
-//                 source:
-//                     'http://localhost:8080/9EA41E9A6007FEF75821347D1A66DD2D',
-//             },
-//         ]),
-//     6000
-// );

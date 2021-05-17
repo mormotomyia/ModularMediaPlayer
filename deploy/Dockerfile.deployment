@@ -1,11 +1,26 @@
-FROM emsusignage.azurecr.io/python_base:0.0.1-amd64
+# syntax = docker/dockerfile:experimental
 
+FROM node:14.16-buster-slim as builder
+WORKDIR /build
+COPY src src
+COPY package.json .
+COPY tsconfig.json .
+RUN npm install
+ARG buildCommand
+# should place the dist in /build/dist (see scripts in package.json)
+RUN npm run ${buildCommand}
+RUN ls -lah
+
+
+FROM emsusignage.azurecr.io/python_base:0.0.1-amd64 as app
 WORKDIR /app
 
-COPY ./requirements.txt ./
+COPY server .
+# COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY --from=builder /build/dist /app/templates/dist
+
 
 EXPOSE 8080
 
