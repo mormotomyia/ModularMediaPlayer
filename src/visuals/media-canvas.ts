@@ -140,44 +140,41 @@ export class MediaCanvas {
         );
     }
 
-    private playableCallback(element: string, dom: HTMLElement): void {
-        this.checkReady();
+    private canStart(): boolean {
+        return this.swapper.every((value: IMediaElement) => {
+            const helperVideo = value.video.find(
+                (e) => e.className === `unhide`
+            );
+            const helperImage = value.image.find(
+                (e) => e.className === `unhide`
+            );
+            const helperBanner = value.banners.find(
+                (e) => e.className === `unhide`
+            );
+            if (
+                helperVideo !== null &&
+                helperVideo !== undefined &&
+                helperVideo.complete
+            )
+                return true;
+            if (
+                helperImage !== null &&
+                helperImage !== undefined &&
+                helperImage.complete
+            )
+                return true;
+            if (
+                helperBanner !== null &&
+                helperBanner !== undefined &&
+                helperBanner.complete
+            )
+                return true;
+            return false;
+        });
     }
 
-    private checkReady(): void {
-        // console.log(this.swapper);
-        if (
-            this.swapper.every((value: IMediaElement) => {
-                const helperVideo = value.video.find(
-                    (e) => e.className === `unhide`
-                );
-                const helperImage = value.image.find(
-                    (e) => e.className === `unhide`
-                );
-                const helperBanner = value.banners.find(
-                    (e) => e.className === `unhide`
-                );
-                if (
-                    helperVideo !== null &&
-                    helperVideo !== undefined &&
-                    helperVideo.complete
-                )
-                    return true;
-                if (
-                    helperImage !== null &&
-                    helperImage !== undefined &&
-                    helperImage.complete
-                )
-                    return true;
-                if (
-                    helperBanner !== null &&
-                    helperBanner !== undefined &&
-                    helperBanner.complete
-                )
-                    return true;
-                return false;
-            })
-        ) {
+    private playableCallback(element: string, dom: HTMLElement): void {
+        if (this.canStart()) {
             clearTimeout(this.startTimeout);
             this.startTimeout = setTimeout(() => this.start(), 10);
         }
