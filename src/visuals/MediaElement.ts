@@ -110,6 +110,12 @@ export class MediaElement implements IMediaElement {
             }
         });
     }
+    playVideo() {
+        if (this.videoToShow !== undefined) {
+            this.videoToShow.muted = true;
+            this.videoToShow.play();
+        }
+    }
 
     swap(keyword?: string) {
         this.swapElements(this.image, keyword);

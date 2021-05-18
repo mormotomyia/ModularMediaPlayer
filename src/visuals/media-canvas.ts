@@ -143,13 +143,13 @@ export class MediaCanvas {
     private canStart(): boolean {
         return this.swapper.every((value: IMediaElement) => {
             const helperVideo = value.video.find(
-                (e) => e.className === `unhide`
+                (video) => video.className === `unhide`
             );
             const helperImage = value.image.find(
-                (e) => e.className === `unhide`
+                (img) => img.className === `unhide`
             );
             const helperBanner = value.banners.find(
-                (e) => e.className === `unhide`
+                (banner) => banner.className === `unhide`
             );
             if (
                 helperVideo !== null &&
@@ -182,11 +182,7 @@ export class MediaCanvas {
 
     private start(): void {
         this.swapper.forEach((value: IMediaElement) => {
-            if (value.videoToShow !== undefined) {
-                value.videoToShow.muted = true;
-                value.videoToShow.play();
-            }
-            // console.log(value);
+            value.playVideo();
             value.swap();
             console.log(`start: ${Date.now()}`);
         });

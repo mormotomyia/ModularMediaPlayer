@@ -36,7 +36,7 @@ if (envs[1] === 'spotlight') {
             rotate: false,
         },
         1: {
-            p1: { x: 0, y: 1920 },
+            p1: { x: 0, y: 1920 * 1 },
             p2: { x: 1080, y: 1920 * 2 },
             rotate: false,
         },

@@ -1,5 +1,6 @@
 
 div{
+    //https://cubic-bezier.com/#1,0,0,1
 --custom-fade:opacity cubic-bezier(1,0,0,1) 0.5s;
 }
 
@@ -12,10 +13,9 @@ div{
     opacity: 0;
     transition: var(--custom-fade);
     overflow:inherit;
-    // display: none
 }
 
-.unhide{
+.unhide {
     width: inherit;
     height: inherit;
     position: absolute;
@@ -29,8 +29,6 @@ div{
     width: inherit;
     height: inherit;
     position: absolute;
-    // left: inherit;
-    // top: inherit;
     display: block;
     opacity: 1;
     transition: var(--custom-fade);

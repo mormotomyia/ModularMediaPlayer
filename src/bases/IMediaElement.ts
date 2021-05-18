@@ -10,6 +10,7 @@ export interface IMediaElement {
     // tempContainerVideo?:CustomMormoVideo,
     // tempContainerImage?:HTMLImageElement,
     swap(keyword?: string): void;
+    playVideo(): void;
     activeVideo: CustomMormoVideo;
     inactiveVideo: CustomMormoVideo;
     videoToShow: CustomMormoVideo;
@@ -19,7 +20,6 @@ export interface IMediaElement {
     activeBanner: CustomMormoBanner;
     inactiveBanner: CustomMormoBanner;
     bannerToShow: CustomMormoBanner;
-
     allUsedItem: Array<HTMLElement>;
     allUnusedItem: Array<HTMLElement>;
 }
