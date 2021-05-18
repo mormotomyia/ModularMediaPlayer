@@ -42,43 +42,29 @@ export class MediaCanvasFactory {
         }
     }
 
-    setMedia(layer: number): void;
+    endMedia(layer: number): void {
+        clearTimeout(this.layers.get(layer).timeout);
+        clearTimeout(this.layers.get(layer).startTimeout);
+        this.layers.get(layer).defaultContentEndAction(true);
+    }
+
     setMedia(
         layer: number,
-        duration?: number,
-        media?: Array<{
-            element: string;
-            type: typeof MediaType;
-            source: string;
-        }>
-    ): void;
-    setMedia(
-        layer: number,
-        duration?: number,
-        media?: Array<{
+        duration: number,
+        media: Array<{
             element: string;
             type: typeof MediaType;
             source: string;
         }>
     ): void {
-        if (!media) {
-            // end all playing content!
-
+        this.layers.get(layer).setMedias(media);
+        if (duration >= 1) {
             clearTimeout(this.layers.get(layer).timeout);
             clearTimeout(this.layers.get(layer).startTimeout);
-            this.layers.get(layer).defaultContentEndAction(true);
-        } else {
-            this.layers.get(layer).setMedias(media);
-            if (duration < 1) {
-            } else {
-                clearTimeout(this.layers.get(layer).timeout);
-                clearTimeout(this.layers.get(layer).startTimeout);
-                // setTimeout(() => console.log('after two seconds'), 2000);
-                this.layers.get(layer).timeout = setTimeout(
-                    () => this.layers.get(layer).defaultContentEndAction(false),
-                    duration * 1000 + new Date().getMilliseconds()
-                );
-            }
+            this.layers.get(layer).timeout = setTimeout(
+                () => this.layers.get(layer).defaultContentEndAction(false),
+                duration * 1000 + new Date().getMilliseconds()
+            );
         }
     }
 }

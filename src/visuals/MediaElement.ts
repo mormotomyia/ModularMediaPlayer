@@ -45,16 +45,9 @@ export class MediaElement implements IMediaElement {
             );
 
             const videoElement = new CustomMormoVideo();
-            if (index === 0) {
-                imageElement.classList.add('hide');
-                videoElement.classList.add('hide');
-                bannerElement.classList.add('hide');
-            }
-            if (index === 1) {
-                imageElement.classList.add('hide');
-                videoElement.classList.add('hide');
-                bannerElement.classList.add('hide');
-            }
+            imageElement.classList.add('hide');
+            videoElement.classList.add('hide');
+            bannerElement.classList.add('hide');
             canvasElement.appendChild(bannerElement);
             canvasElement.appendChild(videoElement);
             canvasElement.appendChild(imageElement);

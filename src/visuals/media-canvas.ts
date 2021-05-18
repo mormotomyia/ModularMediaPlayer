@@ -60,7 +60,6 @@ export class MediaCanvas {
         debug: boolean
     ) {
         this.container = container;
-
         this.rootelement = document.createElement('div');
         this.rootelement.classList.add('media-canvas');
         this.rootelement.id = layer.toString();
@@ -82,10 +81,8 @@ export class MediaCanvas {
             const canvasElement = document.createElement('div');
             canvasElement.classList.add('canvas-element');
             canvasElement.id = element[0];
-            if (!element[1].rotate) {
-                // console.log(element[1].p1)
-                // {p1: { x:number, y:number}, p2: { x:number, y:number}}
 
+            if (!element[1].rotate) {
                 canvasElement.setAttribute(
                     'style',
                     `height:${element[1].p2.y - element[1].p1.y}px ;
@@ -113,6 +110,7 @@ export class MediaCanvas {
                     `
                 );
             }
+
             this.createMediaElements(canvasElement);
 
             if (debug) {
@@ -143,7 +141,6 @@ export class MediaCanvas {
     }
 
     private playableCallback(element: string, dom: HTMLElement): void {
-        // console.log('ready Check');
         this.checkReady();
     }
 
@@ -181,10 +178,8 @@ export class MediaCanvas {
                 return false;
             })
         ) {
-            // console.log(`${new Date()} passed check`);
             clearTimeout(this.startTimeout);
             this.startTimeout = setTimeout(() => this.start(), 10);
-            // console.log(this.startTimeout);
         }
     }
 
@@ -214,6 +209,10 @@ export class MediaCanvas {
         });
     }
 
+    /**
+     *
+     * @param media [{element:0, type:"image",source:"AJHSKDAHDSK"}]
+     */
     setMedias(
         media: Array<{
             element: string;
