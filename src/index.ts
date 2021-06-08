@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 import { MediaCanvasFactory } from './visuals/media-canvas-factory';
 import { Adapter } from './adapters/adapter';
 //  ?x={"0":%20{"p1":%20{"x":%200,%20"y":%200},%20"p2":%20{"x":%201080,%20"y":%201920},%20"rotate":%20false}}

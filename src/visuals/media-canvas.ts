@@ -1,13 +1,12 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 import { IMediaElement } from '../bases/IMediaElement';
 import { CustomMormoBanner } from './custom-banner';
 import { CustomMormoVideo } from './custom-video';
 import { MediaElement } from './MediaElement';
-
-/**
- * @author Mathias Hüttenmüller
- * @copyright Mathias Hüttenmüller 2021
- * @license
- */
 
 /**
  * defines the screen position on the canvas

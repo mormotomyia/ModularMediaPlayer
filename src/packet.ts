@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 export class Packet {
     end_packet: string;
     layer: string;

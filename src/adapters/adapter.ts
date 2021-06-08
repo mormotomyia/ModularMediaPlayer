@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 import { MediaType } from '../visuals/media-canvas';
 import { IInput, MediaCanvasFactory } from '../visuals/media-canvas-factory';
 

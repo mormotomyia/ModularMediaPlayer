@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 interface CustomElementConfig {
     selector: string;
     template: string;

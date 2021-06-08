@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 import { CustomMormoBanner } from '../visuals/custom-banner';
 import { CustomMormoVideo } from '../visuals/custom-video';
 

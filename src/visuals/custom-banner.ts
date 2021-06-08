@@ -1,3 +1,8 @@
+/*
+ * COPYRIGHT @MATHIAS HÜTTENMÜLLER 2021
+ * LICENSE GPLv3
+ */
+
 import { CustomElement } from '../bases/custom-element-base';
 import { IBanner } from '../interfaces/IBanner';
 
