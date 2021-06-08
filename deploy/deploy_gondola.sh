@@ -26,10 +26,10 @@ then
   docker build --cache-from emsusignage.azurecr.io/$repository:$oldVersion \
     $buildArgs \
     -f "./Dockerfile.deployment" \
-    -t "emsusignage.azurecr.io/$repository:$newVersion" "."
+    -t "emsusignage.azurecr.io/$repository:$newVersion" ".."
   echo "build with cache"
 else
-  docker build $buildArgs -f "./Dockerfile.deployment" -t "emsusignage.azurecr.io/$repository:$newVersion" "."
+  docker build $buildArgs -f "./Dockerfile.deployment" -t "emsusignage.azurecr.io/$repository:$newVersion" ".."
 fi
 
 read -p "Press enter to push or Ctrl-C to not-push"
