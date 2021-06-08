@@ -1,67 +1,37 @@
-@keyframes fadein {
-    from {
-        opacity:0;
-    }
-    to {
-        opacity:1;
-    }
-}
-@-moz-keyframes fadein { /* Firefox */
-    from {
-        opacity:0;
-    }
-    to {
-        opacity:1;
-    }
-}
-@-webkit-keyframes fadein { /* Safari and Chrome */
-    from {
-        opacity:0;
-    }
-    to {
-        opacity:1;
-    }
-}
-@-o-keyframes fadein { /* Opera */
-    from {
-        opacity:0;
-    }
-    to {
-        opacity: 1;
-    }
+
+div{
+    //https://cubic-bezier.com/#1,0,0,1
+--custom-fade:opacity cubic-bezier(1,0,0,1) 0.5s;
 }
 
 
-@keyframes fadeout {
-    from {
-        opacity:1;
-    }
-    to {
-        opacity:0;
-    }
+.hide {
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    display: block;
+    opacity: 0;
+    transition: var(--custom-fade);
+    overflow:inherit;
 }
-@-moz-keyframes fadeout { /* Firefox */
-    from {
-        opacity:1;
-    }
-    to {
-        opacity:0;
-    }
+
+.unhide {
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    display: block;
+    opacity: 0;
+    transition: var(--custom-fade);
+    overflow:inherit;
 }
-@-webkit-keyframes fadeout { /* Safari and Chrome */
-    from {
-        opacity:1;
-    }
-    to {
-        opacity:0;
-    }
-}
-@-o-keyframes fadeout { /* Opera */
-    from {
-        opacity:1;
-    }
-    to {
-        opacity: 0;
-    }
+
+.show{
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    display: block;
+    opacity: 1;
+    transition: var(--custom-fade);
+    overflow:inherit;
 }
 

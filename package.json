@@ -5,10 +5,15 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "start": "npx parcel src/index.html",
+    "start-spotlight": "export NODE_ENV=development+spotlight && npx parcel src/index.html",
+    "start-gondola": "export NODE_ENV=development+gondel && npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-server": "cd assets && http-server -p 5051 --cors",
-    "prepublish": "tsc"
+    "prepublish": "tsc",
+    "legacy": "find ./deploy/templates/dist -maxdepth 1 -type f -delete && NODE_ENV=production+spotlight  parcel build src/index.html --out-dir deploy/templates/dist --no-source-maps --target browser --bundle-node-modules --detailed-report --no-content-hash",
+    "build-production+spotlight": "NODE_ENV=production+spotlight  parcel build src/index.html --out-dir dist --no-source-maps --target browser --bundle-node-modules --detailed-report --no-content-hash",
+    "build-development+spotlight": "NODE_ENV=development+spotlight parcel build src/index.html --out-dir dist --no-source-maps --target browser --bundle-node-modules --detailed-report --no-content-hash",
+    "build-production+gondola": "NODE_ENV=production+gondel     parcel build src/index.html --out-dir dist --no-source-maps --target browser --bundle-node-modules --detailed-report --no-content-hash"
   },
   "author": "mormo",
   "license": "GPLv3",
@@ -16,12 +21,16 @@
     "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
+    "html-webpack-plugin": "^5.3.1",
     "http-server": "^0.12.3",
-    "nodemon": "^2.0.7",
-    "parcel-bundler": "^1.12.4",
+    "parcel-bundler": "^1.12.5",
     "prettier": "2.2.1",
     "sass": "^1.32.6",
+    "ts-loader": "^8.0.18",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.4"
+    "typescript": "^4.2.3",
+    "webpack": "^5.26.2",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }

@@ -4,7 +4,7 @@ import { IBanner } from '../interfaces/IBanner';
 @CustomElement({
     selector: 'mormo-banner',
     template: `<div></div>`,
-    style: `position: inherit; left:0; top:0;opacity:0; width:inherit; height:inherit`,
+    style: `left:0; top:0; width:inherit; height:inherit`,
     useShadow: false,
 })
 export class CustomMormoBanner extends HTMLElement {
@@ -24,15 +24,17 @@ export class CustomMormoBanner extends HTMLElement {
         return this._loaded;
     }
 
+    get complete() {
+        return this.loaded;
+    }
+
     onload: any = () => {
         this._loaded = true;
-        // console.log('load')
     };
 
     render(template: IBanner) {
         this.setContent(template.content);
         Object.keys(template.style).forEach((key) => {
-            // console.log(key,JSON.stringify(template.style[key]).substring(1,JSON.stringify(template.style[key]).length-1).replaceAll(',',';').replaceAll('"',''))
             console.log(document.querySelector(key).getAttribute('style'));
             const item = document.querySelector(key);
             item.setAttribute(
@@ -46,22 +48,21 @@ export class CustomMormoBanner extends HTMLElement {
                         1,
                         JSON.stringify(template.style[key]).length - 1
                     )
-                    .replaceAll(',', ';')
-                    .replaceAll('"', '')}`
+                    .split(',')
+                    .join(';')
+                    .split('"')
+                    .join('')}`
             );
-            // document.querySelector(key).setAttribute("style","color:red")
         });
         Object.keys(template.animate).forEach((key) => {
             const item = document.querySelector(key);
-            // console.log(item);
-            // console.log(template.animate[key].keyframes);
-            // console.log(template.animate[key].options);
+
             item.animate(
                 template.animate[key].keyframes,
                 template.animate[key].options
             );
         });
-        // this.setAttribute('style',template.style)
+
         this.onload();
     }
 
@@ -69,9 +70,7 @@ export class CustomMormoBanner extends HTMLElement {
         this.innerHTML = content;
     }
 
-    instanciate() {
-        // throw new Error("Method not implemented.");
-    }
+    instanciate() {}
 
     connectedCallback() {}
 
@@ -79,16 +78,9 @@ export class CustomMormoBanner extends HTMLElement {
 
     componentWillMount() {}
 
-    componentDidMount() {
-        // console.log('component did mount');
-        // console.log(new Date().getMilliseconds());
-    }
+    componentDidMount() {}
 
-    componentWillUnmount() {
-        // console.log('component will unmount');
-    }
+    componentWillUnmount() {}
 
-    componentDidUnmount() {
-        // console.log('component did unmount');
-    }
+    componentDidUnmount() {}
 }

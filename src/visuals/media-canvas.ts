@@ -1,5 +1,7 @@
-import { IMediaElement, MediaElement } from '../bases/IMediaElement';
+import { IMediaElement } from '../bases/IMediaElement';
+import { CustomMormoBanner } from './custom-banner';
 import { CustomMormoVideo } from './custom-video';
+import { MediaElement } from './MediaElement';
 
 /**
  * @author Mathias Hüttenmüller
@@ -7,6 +9,9 @@ import { CustomMormoVideo } from './custom-video';
  * @license
  */
 
+/**
+ * defines the screen position on the canvas
+ */
 export interface IScreen {
     [key: string]: {
         p1: { x: number; y: number };
@@ -31,9 +36,9 @@ export const MediaType = 'video' || 'image' || 'text';
 export class MediaCanvas {
     startTimeout: any;
     timeout: any;
-    defaultContentEndAction: Function = () =>
-        (this.rootelement.style.display = 'none');
-    contentEndAction: Function = this.defaultContentEndAction;
+    defaultContentEndAction: Function = (arg: boolean) => this.hideAll(arg);
+    // (this.rootelement.style.display = 'none');
+    // contentEndAction: Function = this.defaultContentEndAction;
     container: HTMLElement;
     rootelement: HTMLElement;
     mediaContainers: Map<string, IMediaElement> = new Map();
@@ -55,7 +60,6 @@ export class MediaCanvas {
         debug: boolean
     ) {
         this.container = container;
-        // console.log(this.container)
         this.rootelement = document.createElement('div');
         this.rootelement.classList.add('media-canvas');
         this.rootelement.id = layer.toString();
@@ -65,8 +69,6 @@ export class MediaCanvas {
         );
 
         if (debug) {
-            // console.log(this.rootelement.getAttribute("style"))
-
             this.rootelement.setAttribute(
                 'style',
                 `${this.rootelement.getAttribute(
@@ -74,43 +76,42 @@ export class MediaCanvas {
                 )};background-color:rgb(50,30,120)`
             );
         }
-        // console.log(Object.entries(screens))
+
         Object.entries(screens).forEach((element: Array<any>) => {
             const canvasElement = document.createElement('div');
             canvasElement.classList.add('canvas-element');
             canvasElement.id = element[0];
-            if (!element[1].rotate) {
-                // console.log(element[1].p1)
-                // {p1: { x:number, y:number}, p2: { x:number, y:number}}
 
+            if (!element[1].rotate) {
                 canvasElement.setAttribute(
                     'style',
                     `height:${element[1].p2.y - element[1].p1.y}px ;
-                width:${element[1].p2.x - element[1].p1.x}px ;
-                left:${element[1].p1.x}px;
-                top: ${element[1].p1.y}px;
-                position: absolute;
-                overflow: hidden`
+                    width:${element[1].p2.x - element[1].p1.x}px ;
+                    left:${element[1].p1.x}px;
+                    top: ${element[1].p1.y}px;
+                    position: absolute;
+                    overflow: hidden`
                 );
-                this.createMediaElements(canvasElement);
             } else {
                 // math time!
                 canvasElement.setAttribute(
                     'style',
+                    `width:${element[1].p2.y - element[1].p1.y}px ;
+                    height:${element[1].p2.x - element[1].p1.x}px ;
+                    left:${
+                        element[1].p1.x + element[1].p2.x - element[1].p1.x
+                    }px; 
+                    top: ${element[1].p1.y}px;
+                    transform-origin:0% 0%;
+                    transform: rotate(${
+                        element[1].rotate !== true ? element[1].rotate : '90deg'
+                    });
+                    position: absolute; overflow: hidden
                     `
-                width:${element[1].p2.y - element[1].p1.y}px ;
-                height:${element[1].p2.x - element[1].p1.x}px ;
-                left:${element[1].p1.x + element[1].p2.x - element[1].p1.x}px; 
-                top: ${element[1].p1.y}px;
-                transform-origin:0% 0%;
-                transform: rotate(${
-                    element[1].rotate !== true ? element[1].rotate : '90deg'
-                });
-                position: absolute; overflow: hidden
-                `
                 );
-                this.createMediaElements(canvasElement);
             }
+
+            this.createMediaElements(canvasElement);
 
             if (debug) {
                 canvasElement.setAttribute(
@@ -139,75 +140,72 @@ export class MediaCanvas {
         );
     }
 
-    private playableCallback(element: string, dom: HTMLElement): void {
-        console.log(dom.nodeName);
-        console.log('ready Check');
-        if (dom.nodeName === 'VIDEO') {
-            dom.oncanplaythrough = () => {};
-        }
-        if (dom.nodeName === 'IMG') {
-            dom.onload = () => {};
-        }
-        if (dom.nodeName === 'MORMO-BANNER') {
-            dom.onload = () => {};
-        }
-
-        this.checkReady();
+    private canStart(): boolean {
+        return this.swapper.every((value: IMediaElement) => {
+            const helperVideo = value.video.find(
+                (video) => video.className === `unhide`
+            );
+            const helperImage = value.image.find(
+                (img) => img.className === `unhide`
+            );
+            const helperBanner = value.banners.find(
+                (banner) => banner.className === `unhide`
+            );
+            if (
+                helperVideo !== null &&
+                helperVideo !== undefined &&
+                helperVideo.complete
+            )
+                return true;
+            if (
+                helperImage !== null &&
+                helperImage !== undefined &&
+                helperImage.complete
+            )
+                return true;
+            if (
+                helperBanner !== null &&
+                helperBanner !== undefined &&
+                helperBanner.complete
+            )
+                return true;
+            return false;
+        });
     }
 
-    private checkReady(): void {
-        // console.log('----')
-
-        console.log(this.mediaContainers.values());
-
-        if (
-            this.swapper.every((value: IMediaElement) => {
-                const helperVideo = value.video.find(
-                    (e) => e.className === `active`
-                );
-                const helperImage = value.image.find(
-                    (e) => e.className === `active`
-                );
-                const helperBanner = value.banners.find(
-                    (e) => e.className === `active`
-                );
-                if (helperVideo !== null && helperVideo.playable) return true;
-                if (helperImage !== null && helperImage.complete) return true;
-                if (helperBanner !== null && helperBanner.loaded) return true;
-                return false;
-            })
-        ) {
-            console.log(`${new Date()} passed check`);
+    private playableCallback(element: string, dom: HTMLElement): void {
+        if (this.canStart()) {
             clearTimeout(this.startTimeout);
-            setTimeout(() => this.start(), 1500 - new Date().getMilliseconds());
-            console.log(this.startTimeout);
+            this.startTimeout = setTimeout(() => this.start(), 10);
         }
     }
 
     private start(): void {
-        console.log('started!');
-        console.log(this.swapper);
         this.swapper.forEach((value: IMediaElement) => {
-            value.activeVideo.muted = true;
-            value.activeVideo.play();
-
-            // this needs to work in some better way
-
-            value.allUnusedItem.forEach((item) => {
-                item.style.animation = 'fadeout 0.5s';
-                setTimeout(() => (item.style.opacity = '0'), 500);
-            });
-            value.allUsedItem.forEach((item) => {
-                item.style.animation = 'fadein 0.5s';
-                setTimeout(() => (item.style.opacity = '1'), 500);
-            });
-
+            value.playVideo();
             value.swap();
+            console.log(`start: ${Date.now()}`);
         });
 
         this.rootelement.style.display = 'block';
     }
 
+    hideAll(arg: boolean) {
+        if (arg) {
+            this.rootelement.style.display = 'none';
+        }
+        console.log(`hide all: ${Date.now()}`);
+        console.log(this.rootelement.id);
+
+        this.mediaContainers.forEach((value) => {
+            value.swap('hide');
+        });
+    }
+
+    /**
+     *
+     * @param media [{element:0, type:"image",source:"AJHSKDAHDSK"}]
+     */
     setMedias(
         media: Array<{
             element: string;
@@ -215,87 +213,132 @@ export class MediaCanvas {
             source: string;
         }>
     ): void {
+        // console.log(media);
         this.swapper = [];
-
-        console.log('swapping');
         media.forEach((value) => {
             const { element, type, source } = value;
-            this.setMedia(element, type, source);
-            console.log(this.mediaContainers.get(element));
-            this.swapper.push(this.mediaContainers.get(element));
+            const alreadyActive = this.setMedia(element, type, source);
+            if (!alreadyActive)
+                this.swapper.push(this.mediaContainers.get(element));
         });
     }
 
-    private setUnusedDisplayNone(unused: Array<HTMLElement>) {
-        unused.forEach((element) => {
-            element.style.display = 'none';
-        });
+    private setImage(element: string, source: string) {
+        let img: HTMLImageElement;
+        try {
+            img = this.mediaContainers
+                .get(element)
+                .image.find((e) => e.className === `unhide`);
+            if (img == undefined) {
+                throw 'no element in hiding!';
+            }
+        } catch (e) {
+            img = this.mediaContainers
+                .get(element)
+                .image.find((e) => e.className === `hide`);
+        }
+        img.setAttribute('src', source);
+        img.onload = () => this.playableCallback(element, img); // wtf! this is amazing!
+        img.className = 'unhide';
     }
 
-    setMedia(element: string, type: typeof MediaType, source: string): void {
-        console.log(element);
+    private setVideo(element: string, source: string) {
+        let video: CustomMormoVideo;
+        try {
+            video = this.mediaContainers
+                .get(element)
+                .video.find((e) => e.className === `unhide`);
+            if (video == undefined) {
+                throw 'no element in hiding!';
+            }
+        } catch (e) {
+            video = this.mediaContainers
+                .get(element)
+                .video.find((e) => e.className === `hide`);
+        }
 
-        let unused: Array<HTMLElement> = [];
+        video
+            .getElementsByTagName('source')
+            .item(0)
+            .setAttribute('src', source);
+        video.oncanplaythrough = () => this.playableCallback(element, video); // wtf! this is amazing!
+
+        video.className = 'unhide';
+        video.load();
+    }
+
+    private setBanner(element: string, source: string) {
+        let banner: CustomMormoBanner;
+        try {
+            banner = this.mediaContainers
+                .get(element)
+                .banners.find((e) => e.className === `unhide`);
+            if (banner == undefined) {
+                throw 'no element in hiding!';
+            }
+        } catch (e) {
+            banner = this.mediaContainers
+                .get(element)
+                .banners.find((e) => e.className === `hide`);
+        }
+
+        banner.className = 'unhide';
+        banner.onload = () => this.playableCallback(element, banner);
+        fetch(source, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'reload', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                banner.render(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    setMedia(element: string, type: typeof MediaType, source: string): boolean {
+        // should prefer selecting items in unhide
+
         switch (type) {
             case 'video':
-                const video = this.mediaContainers
+                const vidActive = this.mediaContainers
                     .get(element)
-                    .video.find((e) => e.className === `active`);
-                video
-                    .getElementsByTagName('source')
-                    .item(0)
-                    .setAttribute('src', source);
-                video.oncanplaythrough = () =>
-                    this.playableCallback(element, video); // wtf! this is amazing!
-                video.load();
+                    .video.find((e) => e.className === `show`);
+                if (vidActive == undefined) {
+                    this.setVideo(element, source);
+                } else if (vidActive.src == source) {
+                    console.log('already active');
+                    return true;
+                } else {
+                    this.setVideo(element, source);
+                }
 
-                unused = this.mediaContainers.get(element).activeNonUsed(video);
-                console.log(unused);
-                this.setUnusedDisplayNone(unused);
                 break;
 
             case 'image':
-                const img = this.mediaContainers
+                const imgActive = this.mediaContainers
                     .get(element)
-                    .image.find((e) => e.className === `active`);
-                img.setAttribute('src', source);
-                img.onload = () => this.playableCallback(element, img); // wtf! this is amazing!
-
-                unused = this.mediaContainers.get(element).activeNonUsed(img);
-                console.log(unused);
-                this.setUnusedDisplayNone(unused);
-
+                    .image.find((e) => e.className === `show`);
+                if (imgActive === undefined) {
+                    this.setImage(element, source);
+                } else if (imgActive.src == source) {
+                    console.log('already active');
+                    return true;
+                } else {
+                    this.setImage(element, source);
+                }
                 break;
 
             case 'text':
-                const banner = this.mediaContainers
-                    .get(element)
-                    .banners.find((e) => e.className === `active`);
-                banner.onload = () => this.playableCallback(element, banner);
-                fetch(source, {
-                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'cors', // no-cors, *cors, same-origin
-                    cache: 'reload', // *default, no-cache, reload, force-cache, only-if-cached
-                    credentials: 'same-origin', // include, *same-origin, omit
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                        banner.render(data);
-
-                        unused = this.mediaContainers
-                            .get(element)
-                            .activeNonUsed(banner);
-                        console.log(unused);
-                        this.setUnusedDisplayNone(unused);
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-
+                this.setBanner(element, source);
                 break;
             default:
                 break;
+
+                return false;
         }
     }
 }

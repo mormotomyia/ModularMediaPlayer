@@ -3,13 +3,16 @@ import { CustomElement } from '../bases/custom-element-base';
 @CustomElement({
     selector: 'mormo-video',
     template: `<source>`,
-    style: `position: inherit; left:0; top:0;opacity:0`,
+    style: `left:0; top:0`,
     useShadow: false,
     extender: 'video',
 })
 export class CustomMormoVideo extends HTMLVideoElement {
     constructor() {
         super();
+        this.loop = false;
+        this.autoplay = false;
+
         // this.connectedCallback();
         // this is hacking the template into existence before the call to connectedCallback.
         // Usually you want to create the template on adding it to the DOM.
@@ -22,30 +25,17 @@ export class CustomMormoVideo extends HTMLVideoElement {
         // throw new Error("Method not implemented.");
     }
 
-    connectedCallback() {
-  
-    }
+    connectedCallback() {}
 
-    disconnectedCallback() {
-   
-    }
+    disconnectedCallback() {}
 
-    componentWillMount() {
+    componentWillMount() {}
 
-    }
+    componentDidMount() {}
 
-    componentDidMount() {
-        // console.log('component did mount');
-        // console.log(new Date().getMilliseconds());
-    }
+    componentWillUnmount() {}
 
-    componentWillUnmount() {
-        // console.log('component will unmount');
-    }
-
-    componentDidUnmount() {
-        // console.log('component did unmount');
-    }
+    componentDidUnmount() {}
 
     get playing() {
         return !!(
@@ -58,5 +48,9 @@ export class CustomMormoVideo extends HTMLVideoElement {
 
     get playable() {
         return !!(this.readyState > 2);
+    }
+
+    get complete() {
+        return this.playable;
     }
 }
