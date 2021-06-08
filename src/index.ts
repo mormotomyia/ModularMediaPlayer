@@ -12,9 +12,6 @@ import { IScreen } from './visuals/media-canvas';
 let websocketConn;
 let downloadConn;
 
-// console.log(process.env.NODE_ENV);
-// console.log(process.env.NODE_ENV.split('+'));
-
 const envs = process.env.NODE_ENV.split('+');
 
 if (envs[0] === 'production') {
